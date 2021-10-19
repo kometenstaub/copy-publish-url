@@ -1,4 +1,4 @@
-import { Command, Notice, Plugin } from 'obsidian';
+import { Command, Notice, parseYaml, Plugin } from 'obsidian';
 import type { CopyPublishUrlSettings } from './interfaces';
 import CopyPublishUrlSettingTab from './settings';
 
@@ -25,7 +25,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
         encodedPath = encodedPath.replace(/%20/g, '+');
         url += encodedPath;
         await navigator.clipboard.writeText(url);
-        new Notice('Publish Url copied to your clipboard')
+        new Notice('Publish Url copied to your clipboard');
     }
 
     async onload() {
@@ -39,6 +39,22 @@ export default class CopyPublishUrlPlugin extends Plugin {
             callback: async () => {
                 const tfile = this.app.workspace.getActiveFile();
                 if (tfile !== null) {
+                    const fileCache =
+                        this.app.metadataCache.getFileCache(tfile);
+                    const frontMatter = fileCache?.frontmatter;
+                    if (frontMatter !== undefined) {
+                        try {
+                            const state = frontMatter.publish;
+                            if (state !== undefined && state === false) {
+                                new Notice(
+                                    'This note contains the publish: false flag.'
+                                );
+                                return;
+                            }
+                        } catch {
+                            // do nothing
+                        }
+                    }
                     const path = tfile.path;
                     await this.copyPublishUrl(path);
                 }
