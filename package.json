@@ -1,6 +1,6 @@
 {
 	"name": "copy-publish-url",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Copy the URL of a published note.",
 	"main": "src/main.ts",
 	"scripts": {
