@@ -47,11 +47,12 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                 text.setPlaceholder('https://publish.obsidian.md/help/')
                     .setValue(settings.publishPath)
                     .onChange(async (value) => {
-                        if (value.trim().charAt(-1) !== '/') {
-                            settings.publishPath = value.trim() + '/';
-                        } else {
+						if (value.trim().slice(-1) === '/'){
                             settings.publishPath = value.trim();
                         }
+                        else {
+                            settings.publishPath = value.trim() + '/';
+                        } 
                         await this.plugin.saveSettings();
                     });
             });

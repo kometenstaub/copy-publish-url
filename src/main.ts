@@ -1,4 +1,4 @@
-import { Command, Plugin } from 'obsidian';
+import { Command, Notice, Plugin } from 'obsidian';
 import type { CopyPublishUrlSettings } from './interfaces';
 import CopyPublishUrlSettingTab from './settings';
 
@@ -25,6 +25,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
         encodedPath = encodedPath.replace(/%20/g, '+');
         url += encodedPath;
         await navigator.clipboard.writeText(url);
+        new Notice('Publish Url copied to your clipboard')
     }
 
     async onload() {
