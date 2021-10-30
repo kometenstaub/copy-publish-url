@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/kometenstaub/copy-publish-url/compare/0.1.0...0.1.1) (2021-10-30)
+
+
+### Bug Fixes
+
+* :bug: encodeURI instead of encodeURIComponent ([a4fb08a](https://github.com/kometenstaub/copy-publish-url/commit/a4fb08a91d7b596d933f6260171ee0e94f040703))
+
 ## [0.1.0](https://github.com/kometenstaub/copy-publish-url/compare/0.0.4...0.1.0) (2021-10-30)
 
 
