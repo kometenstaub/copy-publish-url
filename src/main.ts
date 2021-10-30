@@ -21,10 +21,8 @@ export default class CopyPublishUrlPlugin extends Plugin {
                 publishedNote = publishedNote.split('/').last();
             }
         }
-        let encodedPath = encodeURIComponent(publishedNote);
-        encodedPath = encodedPath.replace(/%20/g, '+');
-        encodedPath = encodedPath.replace(/%2F/g, '/');
-        url += encodedPath;
+        url = encodeURI(url + publishedNote)
+        url = url.replace(/%20/g, '+');
         await navigator.clipboard.writeText(url);
         new Notice('Publish Url copied to your clipboard');
     }
