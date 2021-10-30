@@ -1,4 +1,4 @@
-import { Command, Notice, parseYaml, Plugin } from 'obsidian';
+import { Notice, Plugin } from 'obsidian';
 import type { CopyPublishUrlSettings } from './interfaces';
 import CopyPublishUrlSettingTab from './settings';
 
