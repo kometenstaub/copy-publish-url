@@ -23,6 +23,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
         }
         let encodedPath = encodeURIComponent(publishedNote);
         encodedPath = encodedPath.replace(/%20/g, '+');
+        encodedPath = encodedPath.replace(/%2F/g, '/');
         url += encodedPath;
         await navigator.clipboard.writeText(url);
         new Notice('Publish Url copied to your clipboard');
