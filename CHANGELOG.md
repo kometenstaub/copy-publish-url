@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/kometenstaub/copy-publish-url/compare/0.0.4...0.1.0) (2021-10-30)
+
+
+### Features
+
+* :sparkles: replace "%2F" with "/" ([cba161f](https://github.com/kometenstaub/copy-publish-url/commit/cba161fed017af7e58eb85cf99c6204d12048744))
+
 ### [0.0.4](https://github.com/kometenstaub/copy-publish-url/compare/0.0.3...0.0.4) (2021-10-19)
 
 
