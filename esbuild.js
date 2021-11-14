@@ -32,6 +32,7 @@ const isProd = process.env.BUILD === 'production';
 			banner: { js: banner },
 			sourcemap: isProd ? false : 'inline',
 			minify: isProd,
+			logLevel: 'info',
 			treeShaking: true,
 			define: {
 				'process.env.NODE_ENV': JSON.stringify(process.env.BUILD),

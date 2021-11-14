@@ -1,4 +1,4 @@
-import { Notice, Plugin } from 'obsidian';
+import { Notice, Plugin, TFile } from 'obsidian';
 import type { CopyPublishUrlSettings } from './interfaces';
 import CopyPublishUrlSettingTab from './settings';
 
@@ -21,7 +21,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
                 publishedNote = publishedNote.split('/').last();
             }
         }
-        url = encodeURI(url + publishedNote)
+        url = encodeURI(url + publishedNote);
         url = url.replace(/%20/g, '+');
         await navigator.clipboard.writeText(url);
         new Notice('Publish Url copied to your clipboard');
@@ -35,27 +35,37 @@ export default class CopyPublishUrlPlugin extends Plugin {
         this.addCommand({
             id: 'copy-publish-url',
             name: 'Copy URL',
-            callback: async () => {
+            checkCallback: (checking: boolean) => {
                 const tfile = this.app.workspace.getActiveFile();
-                if (tfile !== null) {
-                    const fileCache =
-                        this.app.metadataCache.getFileCache(tfile);
-                    const frontMatter = fileCache?.frontmatter;
-                    if (frontMatter !== undefined) {
-                        try {
-                            const state = frontMatter.publish;
-                            if (state !== undefined && state === false) {
-                                new Notice(
-                                    'This note contains the publish: false flag.'
-                                );
-                                return;
+                if (tfile instanceof TFile) {
+                    if (!checking) {
+                        (async () => {
+                            const fileCache =
+                                this.app.metadataCache.getFileCache(tfile);
+                            const frontMatter = fileCache?.frontmatter;
+                            if (frontMatter !== undefined) {
+                                try {
+                                    const state = frontMatter.publish;
+                                    if (
+                                        state !== undefined &&
+                                        state === false
+                                    ) {
+                                        new Notice(
+                                            'This note contains the publish: false flag.'
+                                        );
+                                        return;
+                                    }
+                                } catch {
+                                    // do nothing
+                                }
                             }
-                        } catch {
-                            // do nothing
-                        }
+                            const path = tfile.path;
+                            await this.copyPublishUrl(path);
+                        })();
                     }
-                    const path = tfile.path;
-                    await this.copyPublishUrl(path);
+                    return true;
+                } else {
+                    return false;
                 }
             },
         });
