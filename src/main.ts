@@ -47,7 +47,6 @@ export default class CopyPublishUrlPlugin extends Plugin {
                                 try {
                                     const state = frontMatter.publish;
                                     if (
-                                        state !== undefined &&
                                         state === false
                                     ) {
                                         new Notice(
