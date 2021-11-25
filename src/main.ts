@@ -120,8 +120,6 @@ export default class CopyPublishUrlPlugin extends Plugin {
             menu.addSeparator()
         }));
 
-
-
         this.addSettingTab(new CopyPublishUrlSettingTab(this.app, this));
     }
 
