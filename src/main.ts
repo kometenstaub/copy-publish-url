@@ -44,9 +44,9 @@ export default class CopyPublishUrlPlugin extends Plugin {
         await this.loadSettings();
 
         this.addCommand({
-            "id": 'copy-publish-url',
-            "name": 'Copy URL',
-            "checkCallback": (checking: boolean) => {
+            id: 'copy-publish-url',
+            name: 'Copy URL',
+            checkCallback: (checking: boolean) => {
                 const tfile = this.app.workspace.getActiveFile();
                 if (tfile instanceof TFile) {
                     if (!checking) {
