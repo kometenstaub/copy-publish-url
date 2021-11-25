@@ -56,5 +56,15 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     });
             });
+        new Setting(containerEl)
+            .setName('Enable in Context Menu')
+            .setDesc('Allow copy publish in context menu.')
+            .addToggle(toggle => {
+                toggle.setValue(this.plugin.settings.enableContext)
+                toggle.onChange(value =>{
+                    this.plugin.settings.enableContext = value
+                    this.plugin.saveSettings()
+                })
+            })
     }
 }

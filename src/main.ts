@@ -1,11 +1,19 @@
-import { Notice, Plugin, TFile } from 'obsidian';
-import type { CopyPublishUrlSettings } from './interfaces';
+import {App, Notice, Plugin, TFile} from 'obsidian';
+import type {CopyPublishUrlSettings} from './interfaces';
 import CopyPublishUrlSettingTab from './settings';
 
 const DEFAULT_SETTINGS: CopyPublishUrlSettings = {
     homeNote: '',
     publishPath: '',
 };
+
+function publishState(app: App, file: TFile) {
+    const fileCache = app.metadataCache.getFileCache(file);
+    const frontMatter = fileCache?.frontmatter;
+    if (frontMatter !== undefined) {
+        return frontMatter.publish
+    }
+}
 
 export default class CopyPublishUrlPlugin extends Plugin {
     //@ts-ignore
@@ -26,6 +34,9 @@ export default class CopyPublishUrlPlugin extends Plugin {
         await navigator.clipboard.writeText(url);
         new Notice('Publish Url copied to your clipboard');
     }
+
+
+
 
     async onload() {
         console.log('loading Copy Publish URL plugin');
@@ -68,6 +79,48 @@ export default class CopyPublishUrlPlugin extends Plugin {
                 }
             },
         });
+        this.registerEvent (this.app.workspace.on("file-menu", (menu, file:TFile) => {
+            menu.addSeparator()
+            const publish = publishState(this.app, file)
+            const option = this.settings.enableContext
+            if (!publish) {
+                return false;
+            }
+            if (publish === true && option) {
+                const path = file.path;
+                menu.addItem((item) => {
+                    item
+                        .setTitle("Copy publish link")
+                        .setIcon("paste-text")
+                        .onClick(async()=>{
+                            await this.copyPublishUrl(path);
+                        });
+                })
+            }
+            menu.addSeparator()
+        }));
+        this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
+            menu.addSeparator()
+            const publish = publishState(this.app, view.file)
+            const option = this.settings.enableContext
+            if (!publish) {
+                return false;
+            }
+            if (publish === true && option) {
+                const path = view.file.path;
+                menu.addItem((item) => {
+                    item
+                        .setTitle("Copy publish link")
+                        .setIcon("paste-text")
+                        .onClick(async()=>{
+                            await this.copyPublishUrl(path);
+                        });
+                })
+            }
+            menu.addSeparator()
+        }));
+
+
 
         this.addSettingTab(new CopyPublishUrlSettingTab(this.app, this));
     }
