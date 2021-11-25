@@ -79,6 +79,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
                 }
             },
         });
+
         this.registerEvent (this.app.workspace.on("file-menu", (menu, file:TFile) => {
             menu.addSeparator()
             const publish = publishState(this.app, file)
@@ -99,6 +100,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
             }
             menu.addSeparator()
         }));
+
         this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
             menu.addSeparator()
             const publish = publishState(this.app, view.file)
