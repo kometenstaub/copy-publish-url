@@ -44,9 +44,9 @@ export default class CopyPublishUrlPlugin extends Plugin {
         await this.loadSettings();
 
         this.addCommand({
-            id: 'copy-publish-url',
-            name: 'Copy URL',
-            checkCallback: (checking: boolean) => {
+            "id": 'copy-publish-url',
+            "name": 'Copy URL',
+            "checkCallback": (checking: boolean) => {
                 const tfile = this.app.workspace.getActiveFile();
                 if (tfile instanceof TFile) {
                     if (!checking) {
@@ -119,6 +119,28 @@ export default class CopyPublishUrlPlugin extends Plugin {
             }
             menu.addSeparator()
         }));
+
+        this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
+            menu.addSeparator()
+            const publish = publishState(this.app, view.file)
+            if (!publish) {
+                return false;
+            }
+            if (publish === true) {
+                const path = view.file.path;
+                menu.addItem((item) => {
+                    item
+                        .setTitle("Copy publish link")
+                        .setIcon("paste-text")
+                        .onClick(async()=>{
+                            await this.copyPublishUrl(path);
+                        });
+                })
+            }
+            menu.addSeparator()
+        }));
+
+
 
         this.addSettingTab(new CopyPublishUrlSettingTab(this.app, this));
     }
