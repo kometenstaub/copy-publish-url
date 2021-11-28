@@ -5,6 +5,8 @@ import CopyPublishUrlSettingTab from './settings';
 const DEFAULT_SETTINGS: CopyPublishUrlSettings = {
     homeNote: '',
     publishPath: '',
+    enableContext: false,
+    enableEditor: false,
 };
 
 function publishState(app: App, file: TFile) {
@@ -121,27 +123,6 @@ export default class CopyPublishUrlPlugin extends Plugin {
             }
             menu.addSeparator()
         }));
-
-        this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
-            menu.addSeparator()
-            const publish = publishState(this.app, view.file)
-            if (!publish) {
-                return false;
-            }
-            if (publish === true) {
-                const path = view.file.path;
-                menu.addItem((item) => {
-                    item
-                        .setTitle("Copy publish link")
-                        .setIcon("paste-text")
-                        .onClick(async()=>{
-                            await this.copyPublishUrl(path);
-                        });
-                })
-            }
-            menu.addSeparator()
-        }));
-
 
 
         this.addSettingTab(new CopyPublishUrlSettingTab(this.app, this));
