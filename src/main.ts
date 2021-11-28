@@ -79,34 +79,14 @@ export default class CopyPublishUrlPlugin extends Plugin {
             },
         });
 
-        console.log(this.settings.enableEditor)
-        this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
-            menu.addSeparator()
-            const publish = publishState(this.app, view.file)
-            if (publish === false) {
-                return false;
-            }
-            if (publish !== false && this.settings.enableEditor) {
-                const path = view.file.path;
-                menu.addItem((item) => {
-                    item
-                        .setTitle("Copy publish link")
-                        .setIcon("link")
-                        .onClick(async()=>{
-                            await this.copyPublishUrl(path);
-                        });
-                })
-            }
-            menu.addSeparator()
-        }));
-
-    this.registerEvent(this.app.workspace.on('file-menu', (menu, file: TFile) => {
-            menu.addSeparator()
+        if (this.settings.enableContext) {
+            this.registerEvent(this.app.workspace.on('file-menu', (menu, file: TFile) => {
             const publish = publishState(this.app, file)
             if (publish === false) {
                 return false;
             }
-            if (publish !== false && this.settings.enableContext) {
+            if (this.settings.enableContext) {
+                menu.addSeparator()
                 const path = file.path;
                 menu.addItem((item) => {
                     item
@@ -119,6 +99,8 @@ export default class CopyPublishUrlPlugin extends Plugin {
             }
             menu.addSeparator()
         }));
+
+        }
 
 
         this.addSettingTab(new CopyPublishUrlSettingTab(this.app, this));

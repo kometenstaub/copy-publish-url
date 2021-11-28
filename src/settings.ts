@@ -58,7 +58,7 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
             });
         new Setting(containerEl)
             .setName('Enable in file Menu')
-            .setDesc('Allow copy publish in context menu.')
+            .setDesc('⚠️ You must reload the plugin to take this in effect.')
             .addToggle(toggle => {
                 toggle.setValue(this.plugin.settings.enableContext)
                 toggle.onChange(async value =>{
@@ -66,15 +66,6 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                     await this.plugin.saveSettings()
                 })
             })
-        new Setting(containerEl)
-            .setName('Enable in editor menu')
-            .setDesc('Allow copy publish in editor menu')
-            .addToggle(toggle  => {
-                toggle.setValue(this.plugin.settings.enableEditor)
-                toggle.onChange(async value => {
-                    this.plugin.settings.enableEditor = value;
-                    await this.plugin.saveSettings();
-                })
-            })
+
     }
 }
