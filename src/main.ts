@@ -37,9 +37,6 @@ export default class CopyPublishUrlPlugin extends Plugin {
         new Notice('Publish Url copied to your clipboard');
     }
 
-
-
-
     async onload() {
         console.log('loading Copy Publish URL plugin');
 
@@ -82,19 +79,19 @@ export default class CopyPublishUrlPlugin extends Plugin {
             },
         });
 
-        this.registerEvent (this.app.workspace.on("file-menu", (menu, file:TFile) => {
+        console.log(this.settings.enableEditor)
+        this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
             menu.addSeparator()
-            const publish = publishState(this.app, file)
-            const option = this.settings.enableContext
-            if (!publish) {
+            const publish = publishState(this.app, view.file)
+            if (publish === false) {
                 return false;
             }
-            if (publish === true && option) {
-                const path = file.path;
+            if (publish !== false && this.settings.enableEditor) {
+                const path = view.file.path;
                 menu.addItem((item) => {
                     item
                         .setTitle("Copy publish link")
-                        .setIcon("paste-text")
+                        .setIcon("link")
                         .onClick(async()=>{
                             await this.copyPublishUrl(path);
                         });
@@ -103,20 +100,19 @@ export default class CopyPublishUrlPlugin extends Plugin {
             menu.addSeparator()
         }));
 
-        this.registerEvent(this.app.workspace.on("editor-menu", (menu, editor, view) => {
+    this.registerEvent(this.app.workspace.on('file-menu', (menu, file: TFile) => {
             menu.addSeparator()
-            const publish = publishState(this.app, view.file)
-            const option = this.settings.enableContext
-            if (!publish) {
+            const publish = publishState(this.app, file)
+            if (publish === false) {
                 return false;
             }
-            if (publish === true && option) {
-                const path = view.file.path;
+            if (publish !== false && this.settings.enableContext) {
+                const path = file.path;
                 menu.addItem((item) => {
                     item
                         .setTitle("Copy publish link")
-                        .setIcon("paste-text")
-                        .onClick(async()=>{
+                        .setIcon("link")
+                        .onClick(async () => {
                             await this.copyPublishUrl(path);
                         });
                 })

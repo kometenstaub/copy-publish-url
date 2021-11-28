@@ -68,7 +68,7 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
             })
         new Setting(containerEl)
             .setName('Enable in editor menu')
-            .setDesc('Allow copy publish in file menu')
+            .setDesc('Allow copy publish in editor menu')
             .addToggle(toggle  => {
                 toggle.setValue(this.plugin.settings.enableEditor)
                 toggle.onChange(async value => {
