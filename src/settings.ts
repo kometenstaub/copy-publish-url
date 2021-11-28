@@ -47,25 +47,27 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                 text.setPlaceholder('https://publish.obsidian.md/help/')
                     .setValue(settings.publishPath)
                     .onChange(async (value) => {
-						if (value.trim().slice(-1) === '/'){
+                        if (value.trim().slice(-1) === '/') {
                             settings.publishPath = value.trim();
-                        }
-                        else {
+                        } else {
                             settings.publishPath = value.trim() + '/';
-                        } 
+                        }
                         await this.plugin.saveSettings();
                     });
             });
         new Setting(containerEl)
-            .setName('Enable in file Menu')
-            .setDesc('⚠️ You must reload the plugin to take this in effect.')
-            .addToggle(toggle => {
-                toggle.setValue(this.plugin.settings.enableContext)
-                toggle.onChange(async value =>{
-                    this.plugin.settings.enableContext = value
-                    await this.plugin.saveSettings()
-                })
-            })
-
+            .setName('Show in file menu')
+            .setDesc(
+                'Enable it to show the Copy Publish URL action in the file menu.'
+            )
+            .addToggle((toggle) => {
+                toggle.setValue(this.plugin.settings.enableContext);
+                toggle.onChange(async (value) => {
+                    this.plugin.settings.enableContext = value;
+                    await this.plugin.saveSettings();
+                    await this.plugin.reloadPlugin()
+                    this.app.setting.openTabById(this.plugin.manifest.id)
+                });
+            });
     }
 }
