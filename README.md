@@ -2,6 +2,8 @@
 
 This plugin adds a command which lets you copy the URL of a note for your Obsidian Publish site.
 
+Optionally, as of v0.2.0, you can also enable a file menu entry. Thank you to [@Mara-Li](https://github.com/Mara-Li) for the contribution.
+
 It doesn't copy the URL if the `publish` flag is set to `false`.
 
 ## Configuration
