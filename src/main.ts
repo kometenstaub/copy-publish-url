@@ -6,7 +6,6 @@ const DEFAULT_SETTINGS: CopyPublishUrlSettings = {
     homeNote: '',
     publishPath: '',
     enableContext: false,
-    enableEditor: false,
 };
 
 function publishState(app: App, file: TFile) {
