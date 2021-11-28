@@ -1,15 +1,42 @@
-import { Notice, Plugin, TFile } from 'obsidian';
+import { App, Menu, Notice, Plugin, TAbstractFile, TFile } from 'obsidian';
 import type { CopyPublishUrlSettings } from './interfaces';
 import CopyPublishUrlSettingTab from './settings';
 
 const DEFAULT_SETTINGS: CopyPublishUrlSettings = {
     homeNote: '',
     publishPath: '',
+    enableContext: false,
 };
+
+function publishState(app: App, file: TFile): boolean {
+    const fileCache = app.metadataCache.getFileCache(file);
+    const frontMatter = fileCache?.frontmatter;
+    // the note has frontmatter
+    if (frontMatter !== undefined) {
+        try {
+            // does it have a publish key-value pair
+            const state = frontMatter.publish;
+            if (state === false) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch {
+            return true;
+        }
+    } else {
+        return true;
+    }
+}
 
 export default class CopyPublishUrlPlugin extends Plugin {
     //@ts-ignore
     settings: CopyPublishUrlSettings;
+
+    async reloadPlugin(): Promise<void> {
+        await this.app.plugins.disablePlugin(this.manifest.id);
+        await this.app.plugins.enablePlugin(this.manifest.id);
+    }
 
     async copyPublishUrl(path: string) {
         let url = this.settings.publishPath;
@@ -27,6 +54,33 @@ export default class CopyPublishUrlPlugin extends Plugin {
         new Notice('Publish Url copied to your clipboard');
     }
 
+    fileMenuEvent() {
+        this.registerEvent(
+            this.app.workspace.on(
+                'file-menu',
+                (menu: Menu, file: TAbstractFile, source: string) => {
+                    if (file instanceof TFile) {
+                        const publish = publishState(this.app, file);
+                        if (!publish) {
+                            return false;
+                        } else {
+                            menu.addSeparator();
+                            const path = file.path;
+                            menu.addItem((item) => {
+                                item.setTitle('Copy Publish URL')
+                                    .setIcon('link')
+                                    .onClick(async () => {
+                                        await this.copyPublishUrl(path);
+                                    });
+                            });
+                        }
+                        menu.addSeparator();
+                    }
+                }
+            )
+        );
+    }
+
     async onload() {
         console.log('loading Copy Publish URL plugin');
 
@@ -40,23 +94,12 @@ export default class CopyPublishUrlPlugin extends Plugin {
                 if (tfile instanceof TFile) {
                     if (!checking) {
                         (async () => {
-                            const fileCache =
-                                this.app.metadataCache.getFileCache(tfile);
-                            const frontMatter = fileCache?.frontmatter;
-                            if (frontMatter !== undefined) {
-                                try {
-                                    const state = frontMatter.publish;
-                                    if (
-                                        state === false
-                                    ) {
-                                        new Notice(
-                                            'This note contains the publish: false flag.'
-                                        );
-                                        return;
-                                    }
-                                } catch {
-                                    // do nothing
-                                }
+                            const state = publishState(this.app, tfile);
+                            if (!state) {
+                                new Notice(
+                                    'This note contains the publish: false flag.'
+                                );
+                                return;
                             }
                             const path = tfile.path;
                             await this.copyPublishUrl(path);
@@ -68,6 +111,10 @@ export default class CopyPublishUrlPlugin extends Plugin {
                 }
             },
         });
+
+        if (this.settings.enableContext) {
+            this.fileMenuEvent();
+        }
 
         this.addSettingTab(new CopyPublishUrlSettingTab(this.app, this));
     }

@@ -1,11 +1,11 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import type SKOSPlugin from './main';
+import type CopyPublishUrlPlugin from './main';
 //import FileSuggester from './suggester'
 
 export default class CopyPublishUrlSettingTab extends PluginSettingTab {
-    plugin: SKOSPlugin;
+    plugin: CopyPublishUrlPlugin;
 
-    constructor(app: App, plugin: SKOSPlugin) {
+    constructor(app: App, plugin: CopyPublishUrlPlugin) {
         super(app, plugin);
         this.plugin = plugin;
     }
@@ -47,14 +47,27 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                 text.setPlaceholder('https://publish.obsidian.md/help/')
                     .setValue(settings.publishPath)
                     .onChange(async (value) => {
-						if (value.trim().slice(-1) === '/'){
+                        if (value.trim().slice(-1) === '/') {
                             settings.publishPath = value.trim();
-                        }
-                        else {
+                        } else {
                             settings.publishPath = value.trim() + '/';
-                        } 
+                        }
                         await this.plugin.saveSettings();
                     });
+            });
+        new Setting(containerEl)
+            .setName('Show in file menu')
+            .setDesc(
+                'Enable it to show the Copy Publish URL action in the file menu.'
+            )
+            .addToggle((toggle) => {
+                toggle.setValue(this.plugin.settings.enableContext);
+                toggle.onChange(async (value) => {
+                    this.plugin.settings.enableContext = value;
+                    await this.plugin.saveSettings();
+                    await this.plugin.reloadPlugin()
+                    this.app.setting.openTabById(this.plugin.manifest.id)
+                });
             });
     }
 }
