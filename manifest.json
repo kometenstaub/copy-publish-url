@@ -1,7 +1,7 @@
 {
 	"id": "copy-publish-url",
 	"name": "Copy Publish URL",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"minAppVersion": "0.12.15",
 	"description": "Copy the URL of a published note.",
 	"author": "kometenstaub",
