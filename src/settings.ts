@@ -1,11 +1,11 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import type SKOSPlugin from './main';
+import type CopyPublishUrlPlugin from './main';
 //import FileSuggester from './suggester'
 
 export default class CopyPublishUrlSettingTab extends PluginSettingTab {
-    plugin: SKOSPlugin;
+    plugin: CopyPublishUrlPlugin;
 
-    constructor(app: App, plugin: SKOSPlugin) {
+    constructor(app: App, plugin: CopyPublishUrlPlugin) {
         super(app, plugin);
         this.plugin = plugin;
     }
