@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/kometenstaub/copy-publish-url/compare/0.2.0...0.2.1) (2021-11-29)
+
+
+### Bug Fixes
+
+* unregister event instead of reloading plugin ([42c0c94](https://github.com/kometenstaub/copy-publish-url/commit/42c0c9448b1edac6454c7f348f41c93cc84b98aa))
+
 ## [0.2.0](https://github.com/kometenstaub/copy-publish-url/compare/0.1.2...0.2.0) (2021-11-28)
 
 
