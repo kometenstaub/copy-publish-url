@@ -65,8 +65,11 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                 toggle.onChange(async (value) => {
                     this.plugin.settings.enableContext = value;
                     await this.plugin.saveSettings();
-                    await this.plugin.reloadPlugin()
-                    this.app.setting.openTabById(this.plugin.manifest.id)
+                    if (value) {
+                        this.plugin.fileMenuEvent(true);
+                    } else {
+                        this.plugin.fileMenuEvent(false);
+                    }
                 });
             });
     }

@@ -33,11 +33,6 @@ export default class CopyPublishUrlPlugin extends Plugin {
     //@ts-ignore
     settings: CopyPublishUrlSettings;
 
-    async reloadPlugin(): Promise<void> {
-        await this.app.plugins.disablePlugin(this.manifest.id);
-        await this.app.plugins.enablePlugin(this.manifest.id);
-    }
-
     async copyPublishUrl(path: string) {
         let url = this.settings.publishPath;
         let publishedNote = path.slice(0, -3);
@@ -54,31 +49,42 @@ export default class CopyPublishUrlPlugin extends Plugin {
         new Notice('Publish Url copied to your clipboard');
     }
 
-    fileMenuEvent() {
-        this.registerEvent(
-            this.app.workspace.on(
-                'file-menu',
-                (menu: Menu, file: TAbstractFile, source: string) => {
-                    if (file instanceof TFile) {
-                        const publish = publishState(this.app, file);
-                        if (!publish) {
-                            return false;
-                        } else {
-                            menu.addSeparator();
-                            const path = file.path;
-                            menu.addItem((item) => {
-                                item.setTitle('Copy Publish URL')
-                                    .setIcon('link')
-                                    .onClick(async () => {
-                                        await this.copyPublishUrl(path);
-                                    });
-                            });
-                        }
-                        menu.addSeparator();
-                    }
-                }
-            )
-        );
+    /**
+     * the same function needs to be passed, so that the reference is the same,
+     * so that `.off` works; otherwise a new function reference would be generated
+     */
+    fileMenuCallbackFunc = (
+        menu: Menu,
+        file: TAbstractFile,
+        source: string
+    ) => {
+        if (file instanceof TFile) {
+            const publish = publishState(this.app, file);
+            if (!publish) {
+                return false;
+            } else {
+                menu.addSeparator();
+                const path = file.path;
+                menu.addItem((item) => {
+                    item.setTitle('Copy Publish URL')
+                        .setIcon('link')
+                        .onClick(async () => {
+                            await this.copyPublishUrl(path);
+                        });
+                });
+            }
+            menu.addSeparator();
+        }
+    };
+
+    fileMenuEvent(toggle: boolean) {
+        if (toggle) {
+            this.registerEvent(
+                this.app.workspace.on('file-menu', this.fileMenuCallbackFunc)
+            );
+        } else {
+            this.app.workspace.off('file-menu', this.fileMenuCallbackFunc);
+        }
     }
 
     async onload() {
@@ -113,7 +119,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
         });
 
         if (this.settings.enableContext) {
-            this.fileMenuEvent();
+            this.fileMenuEvent(true);
         }
 
         this.addSettingTab(new CopyPublishUrlSettingTab(this.app, this));
