@@ -22,7 +22,7 @@ const isProd = process.env.BUILD === 'production';
 
 (async () => {
 	try {
-		await build({
+		await esbuild.build({
 			entryPoints: ['src/main.ts'],
 			bundle: true,
 			watch: !isProd,
