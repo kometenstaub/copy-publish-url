@@ -4,8 +4,8 @@
 	"description": "Copy the URL of a published note.",
 	"main": "src/main.ts",
 	"scripts": {
-		"dev": "cross-env BUILD=dev node esbuild.js",
-		"build": "cross-env BUILD=production node esbuild.js",
+		"dev": "cross-env BUILD=dev node esbuild.mjs",
+		"build": "cross-env BUILD=production node esbuild.mjs",
 		"release": "standard-version"
 	},
 	"standard-version": {
