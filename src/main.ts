@@ -1,4 +1,4 @@
-import { App, Menu, Notice, Plugin, TAbstractFile, TFile } from 'obsidian';
+import {App, Command, Menu, Notice, Plugin, TAbstractFile, TFile} from 'obsidian';
 import type { CopyPublishUrlSettings } from './interfaces';
 import CopyPublishUrlSettingTab from './settings';
 
@@ -6,6 +6,7 @@ const DEFAULT_SETTINGS: CopyPublishUrlSettings = {
     homeNote: '',
     publishPath: '',
     enableContext: false,
+    enableOpenUrl: false,
 };
 
 function publishState(app: App, file: TFile): boolean {
@@ -15,7 +16,7 @@ function publishState(app: App, file: TFile): boolean {
     if (frontMatter !== undefined) {
         try {
             // does it have a publish key-value pair
-            const state = frontMatter.publish;
+            const state: boolean | undefined = frontMatter.publish;
             if (state === false) {
                 return false;
             } else {
@@ -33,7 +34,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
     //@ts-ignore
     settings: CopyPublishUrlSettings;
 
-    async copyPublishUrl(path: string) {
+    getPublishUrl(path: string): string {
         let url = this.settings.publishPath;
         let publishedNote = path.slice(0, -3);
         // the index note is at the root level of the publish vault
@@ -45,8 +46,58 @@ export default class CopyPublishUrlPlugin extends Plugin {
         }
         url = encodeURI(url + publishedNote);
         url = url.replace(/%20/g, '+');
+        return url
+    }
+
+    async copyPublishUrl(path: string): Promise<void> {
+        const url = this.getPublishUrl(path)
         await navigator.clipboard.writeText(url);
         new Notice('Publish Url copied to your clipboard');
+    }
+
+    openPublishUrl(path: string): void {
+        const url = this.getPublishUrl(path)
+        window.open(url)
+    }
+
+    giveCallback(fn: (path: string) => Promise<void> | void): Command['checkCallback'] {
+        return (checking: boolean): boolean => {
+            const tfile: TFile | null = this.app.workspace.getActiveFile();
+            if (tfile !== null) {
+                if (!checking) {
+                    (async () => {
+                        const state = publishState(this.app, tfile);
+                        if (!state) {
+                            new Notice(
+                                'This note contains the publish: false flag.'
+                            );
+                            return;
+                        }
+                        const path = tfile.path;
+                        await fn(path);
+                    })();
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    returnOpenCommand = (): Command => {
+        return {
+            id: 'open-publish-url',
+            name: 'Open URL in browser',
+            checkCallback: this.giveCallback(this.openPublishUrl.bind(this))
+        }
+    }
+
+    returnCopyCommand = (): Command => {
+        return {
+            id: 'copy-publish-url',
+            name: 'Copy URL',
+            checkCallback: this.giveCallback(this.copyPublishUrl.bind(this))
+        }
     }
 
     /**
@@ -92,31 +143,11 @@ export default class CopyPublishUrlPlugin extends Plugin {
 
         await this.loadSettings();
 
-        this.addCommand({
-            id: 'copy-publish-url',
-            name: 'Copy URL',
-            checkCallback: (checking: boolean) => {
-                const tfile = this.app.workspace.getActiveFile();
-                if (tfile instanceof TFile) {
-                    if (!checking) {
-                        (async () => {
-                            const state = publishState(this.app, tfile);
-                            if (!state) {
-                                new Notice(
-                                    'This note contains the publish: false flag.'
-                                );
-                                return;
-                            }
-                            const path = tfile.path;
-                            await this.copyPublishUrl(path);
-                        })();
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
-            },
-        });
+        this.addCommand(this.returnCopyCommand());
+
+        if (this.settings.enableOpenUrl) {
+            this.addCommand(this.returnOpenCommand())
+        }
 
         if (this.settings.enableContext) {
             this.fileMenuEvent(true);
