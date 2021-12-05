@@ -84,9 +84,11 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                     this.plugin.settings.enableOpenUrl = value;
                     await this.plugin.saveSettings();
                     if (value) {
-                        this.plugin.addCommand(this.plugin.returnOpenCommand())
+                        this.plugin.addCommand(this.plugin.returnOpenCommand());
                     } else {
-                        this.app.commands.removeCommand(`${this.plugin.manifest.id}:open-publish-url`)
+                        this.app.commands.removeCommand(
+                            `${this.plugin.manifest.id}:open-publish-url`
+                        );
                     }
                 });
             });
