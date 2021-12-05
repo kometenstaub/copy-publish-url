@@ -6,6 +6,8 @@ Optionally, as of v0.2.0, you can also enable a file menu entry. Thank you to [@
 
 It doesn't copy the URL (or show the file menu entry) if the `publish` flag is set to `false`.
 
+As of v0.3.0, you can also open the current note on the published site directly in your browser. This feature is disabled by default.
+
 ## Configuration
 
 In the settings, you need to set your Publish `Index` note and also the base path of your Obsidian Publish site.
