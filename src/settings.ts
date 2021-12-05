@@ -72,5 +72,23 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                     }
                 });
             });
+
+        new Setting(containerEl)
+            .setName('Open current note in browser')
+            .setDesc(
+                'Enable it to get a command to open the current note on the Obsidian Publish site.'
+            )
+            .addToggle((toggle) => {
+                toggle.setValue(this.plugin.settings.enableOpenUrl);
+                toggle.onChange(async (value) => {
+                    this.plugin.settings.enableOpenUrl = value;
+                    await this.plugin.saveSettings();
+                    if (value) {
+                        this.plugin.addCommand(this.plugin.returnOpenCommand())
+                    } else {
+                        this.app.commands.removeCommand(`${this.plugin.manifest.id}:open-publish-url`)
+                    }
+                });
+            });
     }
 }
