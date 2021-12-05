@@ -14,7 +14,7 @@ const DEFAULT_SETTINGS: CopyPublishUrlSettings = {
     homeNote: '',
     publishPath: '',
     enableContext: false,
-    enableOpenUrl: false,
+    enableOpenUrl: true,
 };
 
 function publishState(app: App, file: TFile): boolean {
