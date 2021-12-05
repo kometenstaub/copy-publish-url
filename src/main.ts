@@ -1,4 +1,12 @@
-import {App, Command, Menu, Notice, Plugin, TAbstractFile, TFile} from 'obsidian';
+import {
+    App,
+    Command,
+    Menu,
+    Notice,
+    Plugin,
+    TAbstractFile,
+    TFile,
+} from 'obsidian';
 import type { CopyPublishUrlSettings } from './interfaces';
 import CopyPublishUrlSettingTab from './settings';
 
@@ -46,21 +54,23 @@ export default class CopyPublishUrlPlugin extends Plugin {
         }
         url = encodeURI(url + publishedNote);
         url = url.replace(/%20/g, '+');
-        return url
+        return url;
     }
 
     async copyPublishUrl(path: string): Promise<void> {
-        const url = this.getPublishUrl(path)
+        const url = this.getPublishUrl(path);
         await navigator.clipboard.writeText(url);
         new Notice('Publish Url copied to your clipboard');
     }
 
     openPublishUrl(path: string): void {
-        const url = this.getPublishUrl(path)
-        window.open(url)
+        const url = this.getPublishUrl(path);
+        window.open(url);
     }
 
-    giveCallback(fn: (path: string) => Promise<void> | void): Command['checkCallback'] {
+    giveCallback(
+        fn: (path: string) => Promise<void> | void
+    ): Command['checkCallback'] {
         return (checking: boolean): boolean => {
             const tfile: TFile | null = this.app.workspace.getActiveFile();
             if (tfile !== null) {
@@ -81,24 +91,24 @@ export default class CopyPublishUrlPlugin extends Plugin {
             } else {
                 return false;
             }
-        }
+        };
     }
 
     returnOpenCommand = (): Command => {
         return {
             id: 'open-publish-url',
             name: 'Open URL in browser',
-            checkCallback: this.giveCallback(this.openPublishUrl.bind(this))
-        }
-    }
+            checkCallback: this.giveCallback(this.openPublishUrl.bind(this)),
+        };
+    };
 
     returnCopyCommand = (): Command => {
         return {
             id: 'copy-publish-url',
             name: 'Copy URL',
-            checkCallback: this.giveCallback(this.copyPublishUrl.bind(this))
-        }
-    }
+            checkCallback: this.giveCallback(this.copyPublishUrl.bind(this)),
+        };
+    };
 
     /**
      * the same function needs to be passed, so that the reference is the same,
@@ -146,7 +156,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
         this.addCommand(this.returnCopyCommand());
 
         if (this.settings.enableOpenUrl) {
-            this.addCommand(this.returnOpenCommand())
+            this.addCommand(this.returnOpenCommand());
         }
 
         if (this.settings.enableContext) {

@@ -1,4 +1,4 @@
-import type {Command} from "obsidian";
+import type { Command } from 'obsidian';
 
 export interface CopyPublishUrlSettings {
     homeNote: string;
@@ -11,6 +11,6 @@ declare module 'obsidian' {
     interface App {
         commands: {
             removeCommand(id: string): void;
-        }
+        };
     }
 }
