@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/kometenstaub/copy-publish-url/compare/0.2.1...0.3.1) (2021-12-05)
+
+
+### Features
+
+* enable open in browser by default ([9089fed](https://github.com/kometenstaub/copy-publish-url/commit/9089fedea8919eccf02d30ef84d4f9656f12c83a))
+* open note in browser ([54e57c4](https://github.com/kometenstaub/copy-publish-url/commit/54e57c48fb316e5a01e5c540cbd038a103834a75))
+
 ## [0.3.0](https://github.com/kometenstaub/copy-publish-url/compare/0.2.1...0.3.0) (2021-12-05)
 
 
