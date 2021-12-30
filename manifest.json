@@ -1,9 +1,9 @@
 {
 	"id": "copy-publish-url",
-	"name": "Copy Publish URL",
+	"name": "Publish and GitHub URL",
 	"version": "0.4.0",
 	"minAppVersion": "0.12.15",
-	"description": "Copy the URL of a published note.",
+	"description": "Copy or open the URL of the corresponding note on your Publish site. You can also open its Git commit history on GitHub.",
 	"author": "kometenstaub",
 	"authorUrl": "https://github.com/kometenstaub",
 	"isDesktopOnly": false

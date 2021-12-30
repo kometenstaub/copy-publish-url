@@ -1,4 +1,4 @@
-# Copy Obsidian Publish URL plugin
+## Publish and GitHub URL plugin
 
 This plugin adds a command which lets you copy the URL of a note for your Obsidian Publish site.
 
@@ -10,6 +10,6 @@ As of v0.3.0, you can also open the current note on the published site directly 
 
 As of v0.4.0, you can open the current note's Git commit history on GitHub. It is turned off by default. You need to set the repository URL and the branch name for it to work.
 
-## Configuration
+### Configuration
 
 In the settings, you need to set your Publish `Index` note and also the base path of your Obsidian Publish site.

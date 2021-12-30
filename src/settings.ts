@@ -17,7 +17,7 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         containerEl.createEl('h2', {
-            text: 'Copy Publish URL Settings',
+            text: 'Publish and GitHub URL plugin settings',
         });
 
         // keys for YAML
