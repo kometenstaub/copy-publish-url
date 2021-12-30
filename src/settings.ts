@@ -92,5 +92,50 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                     }
                 });
             });
+
+        new Setting(containerEl)
+            .setName('GitHub History Command')
+            .setDesc(
+                'Enable it to add the command for opening the GitHub commit history of the current note.'
+            )
+            .addToggle((toggle) => {
+                toggle.setValue(settings.enableGithub);
+                toggle.onChange(async (value) => {
+                    settings.enableGithub = value;
+                    await this.plugin.saveSettings();
+                    this.display()
+                });
+            });
+
+        if (this.plugin.settings.enableGithub) {
+            new Setting(containerEl)
+                .setName('GitHub repository URL')
+                .setDesc('Please enter the URL of your GitHub repository.')
+                .addText((text) => {
+                    text.setPlaceholder('https://github.com/obsidian-community/obsidian-hub')
+                        .setValue(settings.remoteUrl)
+                        .onChange(async (value) => {
+                            if (value.trim().slice(-1) === '/') {
+                                settings.remoteUrl = value.trim();
+                            } else {
+                                settings.remoteUrl = value.trim() + '/';
+                            }
+                            await this.plugin.saveSettings();
+                        });
+                });
+
+            new Setting(containerEl)
+                .setName('Branch name')
+                .setDesc('Please enter the branch name.')
+                .addText((text) => {
+                    text.setPlaceholder('main')
+                        .setValue(settings.branch)
+                        .onChange(async (value) => {
+                            settings.branch = value.trim();
+                            await this.plugin.saveSettings();
+                        });
+                });
+
+        }
     }
 }
