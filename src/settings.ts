@@ -61,9 +61,9 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                 'Enable it to show the Copy Publish URL action in the file menu.'
             )
             .addToggle((toggle) => {
-                toggle.setValue(this.plugin.settings.enableContext);
+                toggle.setValue(settings.enableContext);
                 toggle.onChange(async (value) => {
-                    this.plugin.settings.enableContext = value;
+                    settings.enableContext = value;
                     await this.plugin.saveSettings();
                     if (value) {
                         this.plugin.fileMenuEvent(true);
