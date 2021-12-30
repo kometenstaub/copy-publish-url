@@ -94,16 +94,25 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName('GitHub History Command')
+            .setName('GitHub Commit History Command')
             .setDesc(
-                'Enable it to add the command for opening the GitHub commit history of the current note.'
+                'Enable it to add a command for opening the commit history of the current note on GitHub.'
             )
             .addToggle((toggle) => {
                 toggle.setValue(settings.enableGithub);
                 toggle.onChange(async (value) => {
                     settings.enableGithub = value;
                     await this.plugin.saveSettings();
-                    this.display()
+                    if (value) {
+                        this.plugin.addCommand(
+                            this.plugin.returnGithubOpenCommand()
+                        );
+                    } else {
+                        this.app.commands.removeCommand(
+                            `${this.plugin.manifest.id}:open-git-history`
+                        );
+                    }
+                    this.display();
                 });
             });
 
@@ -112,7 +121,9 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                 .setName('GitHub repository URL')
                 .setDesc('Please enter the URL of your GitHub repository.')
                 .addText((text) => {
-                    text.setPlaceholder('https://github.com/obsidian-community/obsidian-hub')
+                    text.setPlaceholder(
+                        'https://github.com/obsidian-community/obsidian-hub'
+                    )
                         .setValue(settings.remoteUrl)
                         .onChange(async (value) => {
                             if (value.trim().slice(-1) === '/') {
@@ -135,7 +146,6 @@ export default class CopyPublishUrlSettingTab extends PluginSettingTab {
                             await this.plugin.saveSettings();
                         });
                 });
-
         }
     }
 }

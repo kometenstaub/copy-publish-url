@@ -15,6 +15,9 @@ const DEFAULT_SETTINGS: CopyPublishUrlSettings = {
     publishPath: '',
     enableContext: false,
     enableOpenUrl: true,
+    enableGithub: false,
+    remoteUrl: '',
+    branch: 'main',
 };
 
 function publishState(app: App, file: TFile): boolean {
@@ -68,6 +71,13 @@ export default class CopyPublishUrlPlugin extends Plugin {
         window.open(url);
     }
 
+    openGithubHistory(path: string): void {
+        const baseUrl = this.settings.remoteUrl;
+        const remoteUrl = baseUrl + `commits/${this.settings.branch}/${path}`;
+        const encodedRemoteUrl = encodeURI(remoteUrl);
+        window.open(encodedRemoteUrl);
+    }
+
     giveCallback(
         fn: (path: string) => Promise<void> | void
     ): Command['checkCallback'] {
@@ -94,6 +104,26 @@ export default class CopyPublishUrlPlugin extends Plugin {
         };
     }
 
+    giveGithubCallback(
+        fn: (path: string) => Promise<void> | void
+    ): Command['checkCallback'] {
+        return (checking: boolean): boolean => {
+            const tfile: TFile | null = this.app.workspace.getActiveFile();
+            if (tfile !== null) {
+                if (!checking) {
+                    (async () => {
+                        // possible condition check could be added later; if condition not met, return;
+                        const path = tfile.path;
+                        await fn(path);
+                    })();
+                }
+                return true;
+            } else {
+                return false;
+            }
+        };
+    }
+
     returnOpenCommand = (): Command => {
         return {
             id: 'open-publish-url',
@@ -107,6 +137,16 @@ export default class CopyPublishUrlPlugin extends Plugin {
             id: 'copy-publish-url',
             name: 'Copy URL',
             checkCallback: this.giveCallback(this.copyPublishUrl.bind(this)),
+        };
+    };
+
+    returnGithubOpenCommand = (): Command => {
+        return {
+            id: 'open-git-history',
+            name: 'Open Commit History on GitHub',
+            checkCallback: this.giveGithubCallback(
+                this.openGithubHistory.bind(this)
+            ),
         };
     };
 
@@ -161,6 +201,10 @@ export default class CopyPublishUrlPlugin extends Plugin {
 
         if (this.settings.enableContext) {
             this.fileMenuEvent(true);
+        }
+
+        if (this.settings.enableGithub) {
+            this.addCommand(this.returnGithubOpenCommand());
         }
 
         this.addSettingTab(new CopyPublishUrlSettingTab(this.app, this));

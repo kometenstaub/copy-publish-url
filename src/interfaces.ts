@@ -5,6 +5,9 @@ export interface CopyPublishUrlSettings {
     publishPath: string;
     enableContext: boolean;
     enableOpenUrl: boolean;
+    enableGithub: boolean;
+    remoteUrl: string;
+    branch: string;
 }
 
 declare module 'obsidian' {
