@@ -11,7 +11,8 @@
 		"format": "npx prettier --write src/"
 	},
 	"standard-version": {
-		"t": ""
+		"t": "",
+		"releaseCommitMessageFormat": "Publish and GitHub URL: {{currentTag}}"
 	},
 	"keywords": [],
 	"author": "kometenstaub",
