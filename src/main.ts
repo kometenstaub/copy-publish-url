@@ -127,7 +127,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
     returnOpenCommand = (): Command => {
         return {
             id: 'open-publish-url',
-            name: 'Open URL in browser',
+            name: 'Open Publish URL in browser',
             checkCallback: this.giveCallback(this.openPublishUrl.bind(this)),
         };
     };
@@ -135,7 +135,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
     returnCopyCommand = (): Command => {
         return {
             id: 'copy-publish-url',
-            name: 'Copy URL',
+            name: 'Copy Publish URL',
             checkCallback: this.giveCallback(this.copyPublishUrl.bind(this)),
         };
     };
