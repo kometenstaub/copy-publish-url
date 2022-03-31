@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/kometenstaub/copy-publish-url/compare/0.4.2...0.4.3) (2022-03-31)
+
+
+### Bug Fixes
+
+* better null checks ([0a64552](https://github.com/kometenstaub/copy-publish-url/commit/0a64552961041b8fd4ca8c71e257389d9a32204f))
+
 ### [0.4.2](https://github.com/kometenstaub/copy-publish-url/compare/0.4.1...0.4.2) (2022-01-16)
 
 
