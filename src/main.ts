@@ -83,7 +83,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
     ): Command['checkCallback'] {
         return (checking: boolean): boolean => {
             const tfile: TFile | null = this.app.workspace.getActiveFile();
-            if (tfile !== null) {
+            if (tfile) {
                 if (!checking) {
                     (async () => {
                         const state = publishState(this.app, tfile);
@@ -109,7 +109,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
     ): Command['checkCallback'] {
         return (checking: boolean): boolean => {
             const tfile: TFile | null = this.app.workspace.getActiveFile();
-            if (tfile !== null) {
+            if (tfile) {
                 if (!checking) {
                     (async () => {
                         // possible condition check could be added later; if condition not met, return;
