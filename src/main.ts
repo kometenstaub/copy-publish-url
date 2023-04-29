@@ -55,9 +55,11 @@ export default class CopyPublishUrlPlugin extends Plugin {
                 publishedNote = publishedNote.split('/').last();
             }
         }
-        const permalink = this.app.metadataCache.getFileCache(this.app.workspace.getActiveFile() as TFile)?.frontmatter?.permalink
+        const permalink = this.app.metadataCache.getFileCache(
+            this.app.workspace.getActiveFile() as TFile
+        )?.frontmatter?.permalink;
         if (permalink) {
-            publishedNote = permalink
+            publishedNote = permalink;
         }
         url = encodeURI(url + publishedNote);
         url = url.replace(/%20/g, '+');
