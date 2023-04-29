@@ -18,16 +18,16 @@
 	"author": "kometenstaub",
 	"license": "MIT",
 	"devDependencies": {
-		"@types/node": "^14.17.34",
-		"@typescript-eslint/eslint-plugin": "^5.5.0",
-		"@typescript-eslint/parser": "^5.5.0",
+		"@types/node": "^18.16.3",
+		"@typescript-eslint/eslint-plugin": "^5.59.1",
+		"@typescript-eslint/parser": "^5.59.1",
 		"cross-env": "^7.0.3",
 		"esbuild": "^0.13.2",
-		"eslint": "^8.4.0",
-		"obsidian": "^0.12.15",
+		"eslint": "^8.39.0",
+		"obsidian": "^1.2.5",
 		"prettier": "2.5.1",
-		"standard-version": "^9.3.1",
-		"tslib": "^2.2.0",
-		"typescript": "^4.5.2"
+		"standard-version": "^9.5.0",
+		"tslib": "^2.5.0",
+		"typescript": "^5.0.4"
 	}
 }
