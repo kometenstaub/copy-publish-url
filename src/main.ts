@@ -24,7 +24,7 @@ function publishState(app: App, file: TFile): boolean {
     const fileCache = app.metadataCache.getFileCache(file);
     const frontMatter = fileCache?.frontmatter;
     // the note has frontmatter
-    if (frontMatter !== undefined) {
+    if (frontMatter) {
         try {
             // does it have a publish key-value pair
             const state: boolean | undefined = frontMatter.publish;
@@ -55,6 +55,10 @@ export default class CopyPublishUrlPlugin extends Plugin {
                 publishedNote = publishedNote.split('/').last();
             }
         }
+        const permalink = this.app.metadataCache.getFileCache(this.app.workspace.getActiveFile() as TFile)?.frontmatter?.permalink
+        if (permalink) {
+            publishedNote = permalink
+        }
         url = encodeURI(url + publishedNote);
         url = url.replace(/%20/g, '+');
         return url;
@@ -82,7 +86,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
         fn: (path: string) => Promise<void> | void
     ): Command['checkCallback'] {
         return (checking: boolean): boolean => {
-            const tfile: TFile | null = this.app.workspace.getActiveFile();
+            const tfile = this.app.workspace.getActiveFile();
             if (tfile) {
                 if (!checking) {
                     (async () => {
@@ -108,7 +112,7 @@ export default class CopyPublishUrlPlugin extends Plugin {
         fn: (path: string) => Promise<void> | void
     ): Command['checkCallback'] {
         return (checking: boolean): boolean => {
-            const tfile: TFile | null = this.app.workspace.getActiveFile();
+            const tfile = this.app.workspace.getActiveFile();
             if (tfile) {
                 if (!checking) {
                     (async () => {
